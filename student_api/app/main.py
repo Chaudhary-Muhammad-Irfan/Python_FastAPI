@@ -1,11 +1,13 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from prometheus_fastapi_instrumentator import Instrumentator
 from . import models, schemas, crud, database
 
 # Create tables if they don't exist
 models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI(title="Student Management API")
+Instrumentator().instrument(app).expose(app)
 
 # Dependency to get DB session
 def get_db():
